@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>snake</title>
+</head>
+<body>
+    <div>
+        <h1>Choose difficulty to start game</h1>
+
+        <div style="display:inline-block; vertical-align:top;">
+            <button class="difficulty" style="width:200px; height:60px; font-size:24px; padding:10px 20px;">
+            Slow
+            </button><br><br>
+
+            <button class="difficulty" onclick="startGameAsMedium()"
+            style="width:200px; height:60px; font-size:24px; padding:10px 20px;">
+            Fast
+            </button><br><br>
+
+            <button class="difficulty" onclick="startGameAsHard()"
+            style="width:200px; height:60px; font-size:24px; padding:10px 20px;">
+            Very fast
+            </button><br><br>
+
+            <button class="difficulty" onclick="startGameAsTurbo()"
+            style="width:200px; height:60px; font-size:24px; padding:10px 20px;">
+            Turbo mode
+            </button>
+            <p>(Speed increases faster)</p>
+        </div>
+
+        <canvas id="gameCanvas" width="630" height="630"
+            style="display:inline-block; border:2px solid black; vertical-align:top;">
+        </canvas>
+    </div>
+
+    <script src="script.js"></script>
+    <style src="style.css"></style>
+</body>
+</html>

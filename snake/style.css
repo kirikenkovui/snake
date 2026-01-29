@@ -3,8 +3,25 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 }
 
 canvas {
     border: 1px solid #000000;
+}
+.difficulty {
+    width: 200px;
+    height: 60px;
+    font-size: 24px;
+    padding: 10px 20px;
+}
+.buttons-div {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.game-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
 }

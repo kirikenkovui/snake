@@ -6,61 +6,24 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <div>
-            <h1>Choose difficulty to start game</h1>
-
-            <div style="display: inline-block; vertical-align: top">
-                <button
-                    class="difficulty"
-                    style="
-                        width: 200px;
-                        height: 60px;
-                        font-size: 24px;
-                        padding: 10px 20px;
-                    "
-                >
-                    Slow
-                </button>
+        <h1>Choose difficulty to start game</h1>
+        <div class="game-wrapper">
+            <div class="buttons-div">
+                <button onclick="startGameAsEasy()"
+                    class="difficulty">Slow</button>
 
                 <button
                     class="difficulty"
-                    onclick="startGameAsMedium()"
-                    style="
-                        width: 200px;
-                        height: 60px;
-                        font-size: 24px;
-                        padding: 10px 20px;
-                    "
-                >
-                    Fast
-                </button>
+                    onclick="startGameAsMedium()">Fast</button>
 
                 <button
                     class="difficulty"
-                    onclick="startGameAsHard()"
-                    style="
-                        width: 200px;
-                        height: 60px;
-                        font-size: 24px;
-                        padding: 10px 20px;
-                    "
-                >
-                    Very fast
-                </button>
+                    onclick="startGameAsHard()">Very fast</button>
 
                 <button
                     class="difficulty"
-                    onclick="startGameAsTurbo()"
-                    style="
-                        width: 200px;
-                        height: 60px;
-                        font-size: 24px;
-                        padding: 10px 20px;
-                    "
-                >
-                    Turbo mode
-                </button>
-                <p>(Speed increases faster)</p>
+                    onclick="startGameAsTurbo()">Turbo mode</button>
+                <label>(Speed increases faster)</label>
             </div>
 
             <canvas

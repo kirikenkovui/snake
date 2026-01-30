@@ -9,20 +9,20 @@
         <h1>Choose difficulty to start game</h1>
         <div class="game-wrapper">
             <div class="buttons-div">
-                <button onclick="startGameAsEasy()"
+                <button onclick="setDifficulty(200, 0.8)"
                     class="difficulty">Slow</button>
 
                 <button
                     class="difficulty"
-                    onclick="startGameAsMedium()">Fast</button>
+                    onclick="setDifficulty(100, 0.8)">Fast</button>
 
                 <button
                     class="difficulty"
-                    onclick="startGameAsHard()">Very fast</button>
+                    onclick="setDifficulty(50, 0.8)">Very fast</button>
 
                 <button
                     class="difficulty"
-                    onclick="startGameAsTurbo()">Turbo mode</button>
+                    onclick="setDifficulty(200, 0.6)">Turbo mode</button>
                 <label>(Speed increases faster)</label>
             </div>
 

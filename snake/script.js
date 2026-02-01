@@ -144,20 +144,6 @@ function moveSnake() {
   directionLocked = false;
 }
 
-// move snake directions
-function moveSnakeRight() {
-  snakeX += snakeSize;
-}
-function moveSnakeUp() {
-  snakeY -= snakeSize;
-}
-function moveSnakeLeft() {
-  snakeX -= snakeSize;
-}
-function moveSnakeDown() {
-  snakeY += snakeSize;
-}
-
 // FIELD
 function drawField() {
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);

@@ -1,55 +1,57 @@
 const canvasElement = document.querySelector("canvas");
 const ctx = canvasElement.getContext("2d");
-let gameInterval; // toto potrebujeme pretoze chceme menit interval nie len v fotEach (line 50)
-// PREMENNE
-// sirka a vyska pola sa meni len v html :((((((
-const snakeSize = 30; // sirka a vyska snake (nie aka je dlha) ((toto lepsie nemenit))
-const canvasWidth = canvasElement.width; // sirka pola kde bezi snake
-const canvasHeight = canvasElement.height; // vyska pola kde bezi sknake
-let Mseconds = 150; // was `const Mseconds = 250;` — make it `let` only if you plan to change speed later
-let snakeX = 0; // coordinates of snake horizontaly
-let snakeY = canvasHeight / 2 - snakeSize / 2; // coordinates of snake verticaly (math becouse want it be at center right)
-let direction = "right"; // kam teraz ide snake
+let gameInterval; // we need this because we want to change the interval not just in the forEach (line 50)
+
+// VARIABLES
+// field width and height only change in html :((((((
+const snakeSize = 30; // snake width and height (not length) ((better not to change this))
+const canvasWidth = canvasElement.width; // width of the field where the snake runs
+const canvasHeight = canvasElement.height; // height of the field where the snake runs
+let milliseconds = 150; // was `const Mseconds = 250;` — make it `let` only if you plan to change speed later
+let snakeX = 0; // horizontal snake coordinates
+let snakeY = canvasHeight / 2 - snakeSize / 2; // vertical snake coordinates (math used to center it)
+let direction = "right"; // current snake direction
 let nextDirection = direction; // buffered desired direction
 let directionLocked = false; // prevent multiple changes before next move
-let snakeLength = 4; // dlzka snake v kockach
+let snakeLength = 4; // snake length in squares
 let speedBoost = 0.8;
-// hvost
-let pamat = [{ x: snakeX, y: snakeY }];
 
-// premenne jablka:
+// tail/body
+let history = [{ x: snakeX, y: snakeY }];
 
-// 1. coords jablka
-let XJablka = 0;
-let YJablka = 0;
+// apple variables:
 
-// 2. toto potrebujeme na zjedenie jablka
-let jablkoExists = false;
+// 1. apple coordinates
+let appleX = 0;
+let appleY = 0;
+
+// 2. needed to track if the apple is eaten
+let appleExists = false;
 
 // start screen
-function setDifficulty(mSeconds, speedBoost) {
-  Mseconds = mSeconds;
-  speedBoost = speedBoost;
+function setDifficulty(ms, boost) {
+  milliseconds = ms;
+  speedBoost = boost;
 }
 
 const buttons = document.querySelectorAll(".difficulty");
 
 buttons.forEach((btn) => {
   btn.addEventListener("click", () => {
-    gameInterval = setInterval(moveSnake, Mseconds);
+    gameInterval = setInterval(moveSnake, milliseconds);
   });
 });
 
-// funkcie jablka
+// apple functions
 
-// funkcia ktora je zodpovedna za to jablko neni na snake
+// function responsible for ensuring the apple is not on the snake
 function isOnSnake(x, y) {
-  return pamat.some((part) => part.x === x && part.y === y);
+  return history.some((part) => part.x === x && part.y === y);
 }
 
-function getRandomCoordsJablka() {
-  let attempts = 0; //this 2 funcs are here to prevent infinite loop
-  const maxAttempts = 1000; //(that is caused because of the isOnSnake func)
+function getRandomAppleCoords() {
+  let attempts = 0; // these 2 funcs are here to prevent infinite loop
+  const maxAttempts = 1000; // (caused by the isOnSnake func)
   let x, y;
   do {
     x = Math.floor(Math.random() * (canvasWidth / snakeSize)) * snakeSize;
@@ -57,30 +59,30 @@ function getRandomCoordsJablka() {
     attempts++;
   } while (isOnSnake(x, y) && attempts < maxAttempts);
 
-  XJablka = x;
-  YJablka = y;
+  appleX = x;
+  appleY = y;
 }
 
 function drawApple() {
-  if (!jablkoExists) return;
+  if (!appleExists) return;
   ctx.fillStyle = "red";
-  ctx.fillRect(XJablka, YJablka, snakeSize, snakeSize);
+  ctx.fillRect(appleX, appleY, snakeSize, snakeSize);
 }
 
-//SNAKE
+// SNAKE
 function drawSnake() {
   ctx.fillStyle = "green";
-  pamat.forEach((snakePart) => {
+  history.forEach((snakePart) => {
     ctx.fillRect(snakePart.x, snakePart.y, snakeSize, snakeSize);
   });
 }
 
-//func na check ci snake crashol do seba
+// func to check if snake crashed into itself
 function isCrashed(x, y) {
-  return pamat.some((part) => part.x === x && part.y === y);
+  return history.some((part) => part.x === x && part.y === y);
 }
 
-// "hlavna" funkcia ktora sa vola kazdy tick"
+// "main" function called every tick
 function moveSnake() {
   // apply buffered direction once per tick
   direction = nextDirection;
@@ -112,21 +114,21 @@ function moveSnake() {
   // update head coords and body
   snakeX = nextX;
   snakeY = nextY;
-  pamat.push({ x: snakeX, y: snakeY });
-  pamat = pamat.slice(-snakeLength);
+  history.push({ x: snakeX, y: snakeY });
+  history = history.slice(-snakeLength);
 
   drawField();
 
-  if (!jablkoExists) {
-    getRandomCoordsJablka();
-    jablkoExists = true;
+  if (!appleExists) {
+    getRandomAppleCoords();
+    appleExists = true;
   }
   drawApple();
   drawSnake();
 
-  // checking if snake captured jablko
-  if (snakeX === XJablka && snakeY === YJablka) {
-    jablkoExists = false;
+  // checking if snake captured apple
+  if (snakeX === appleX && snakeY === appleY) {
+    appleExists = false;
     snakeLength++;
   }
   if (
@@ -156,16 +158,15 @@ function moveSnakeDown() {
   snakeY += snakeSize;
 }
 
-// POLE
+// FIELD
 function drawField() {
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
   ctx.fillStyle = "lightgrey";
   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 }
 
-// controlls snake
+// controls snake
 // listens for key presses
-
 document.addEventListener("keydown", (e) => {
   if (directionLocked) return; // ignore extra rapid presses until next move
 
@@ -184,14 +185,14 @@ document.addEventListener("keydown", (e) => {
   directionLocked = true;
 });
 
-// pridanie jablka
-function pridatJedlo() {
-  Mseconds = Math.ceil(Mseconds * speedBoost);
+// adding food
+function addFood() {
+  milliseconds = Math.ceil(milliseconds * speedBoost);
 
-  getRandomCoordsJablka();
+  getRandomAppleCoords();
 
   // mark apple as present; drawing happens in drawApple() each frame
-  jablkoExists = true;
+  appleExists = true;
 }
 
 // DEATH SCREEN
@@ -227,13 +228,8 @@ async function deathScreen() {
     canvasHeight / 2 + 100,
   );
 
-  // wait for key press once
+  // wait for click to reload
   document.addEventListener("click", () => {
     location.reload();
   });
-}
-
-// helper wait function
-function wait(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
 }

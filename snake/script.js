@@ -15,7 +15,7 @@ let nextDirection = direction; // buffered desired direction
 let directionLocked = false; // prevent multiple changes before next move
 let snakeLength = 4; // snake length in squares
 let speedBoost = 0.8;
-
+const buttonsElement = document.getElementById("dif-div");
 // tail/body
 let history = [{ x: snakeX, y: snakeY }];
 
@@ -32,6 +32,9 @@ let appleExists = false;
 function setDifficulty(ms, boost) {
   milliseconds = ms;
   speedBoost = boost;
+  console.log("test");
+  buttonsElement.style.display = "none";
+  canvasElement.style.display = "block";
 }
 
 const buttons = document.querySelectorAll(".difficulty");

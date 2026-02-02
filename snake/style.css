@@ -25,3 +25,6 @@ canvas {
     flex-direction: row;
     gap: 20px;
 }
+.hidden {
+    display: none;
+}

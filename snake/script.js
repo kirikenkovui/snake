@@ -4,7 +4,7 @@ let gameInterval; // we need this because we want to change the interval not jus
 
 // VARIABLES
 // field width and height only change in html :((((((
-const snakeSize = 30; // snake width and height (not length) ((better not to change this))
+const snakeSize = 45; // snake width and height (not length) ((better not to change this))
 const canvasWidth = canvasElement.width; // width of the field where the snake runs
 const canvasHeight = canvasElement.height; // height of the field where the snake runs
 let milliseconds = 150; // was `const Mseconds = 250;` — make it `let` only if you plan to change speed later

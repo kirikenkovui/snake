@@ -16,6 +16,7 @@ let directionLocked = false; // prevent multiple changes before next move
 let snakeLength = 4; // snake length in squares
 let speedBoost = 0.8;
 const buttonsElement = document.getElementById("dif-div");
+const intsElement = document.getElementById("inst");
 // tail/body
 let history = [{ x: snakeX, y: snakeY }];
 
@@ -34,6 +35,7 @@ function setDifficulty(ms, boost) {
   speedBoost = boost;
   console.log("test");
   buttonsElement.style.display = "none";
+  intsElement.style.display = "none";
   canvasElement.style.display = "block";
 }
 

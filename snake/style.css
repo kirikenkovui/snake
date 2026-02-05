@@ -31,3 +31,9 @@ canvas {
     pointer-events: none;
     display: none;
 }
+
+h1 {
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 700;
+    font-style: italic;
+}

@@ -9,6 +9,26 @@ body {
 canvas {
     border: 1px solid #000000;
 }
+
+.game-header {
+    padding: 15px;
+    background: #f0f0f0;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.score-display {
+    display: flex;
+    gap: 30px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.score-display div {
+    min-width: 150px;
+}
+
 .difficulty {
     width: 200px;
     height: 60px;

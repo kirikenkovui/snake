@@ -34,10 +34,11 @@ let appleExists = false;
 function setDifficulty(ms, boost) {
   milliseconds = ms;
   speedBoost = boost;
-  console.log("test");
   buttonsElement.style.display = "none";
   intsElement.style.display = "none";
+  document.getElementById("gameHeader").style.display = "block";
   canvasElement.style.display = "block";
+  updateScoreDisplay();
 }
 
 const buttons = document.querySelectorAll(".difficulty");
@@ -136,6 +137,7 @@ function moveSnake() {
   if (snakeX === appleX && snakeY === appleY) {
     appleExists = false;
     snakeLength++;
+    updateScoreDisplay();
   }
   if (
     snakeX < 0 ||
@@ -241,4 +243,11 @@ async function deathScreen() {
   document.addEventListener("click", () => {
     location.reload();
   });
+}
+
+// Update score display during gameplay
+function updateScoreDisplay() {
+  const currentScore = snakeLength - 4;
+  document.getElementById("currentScore").textContent = currentScore;
+  document.getElementById("highScoreDisplay").textContent = highScore;
 }

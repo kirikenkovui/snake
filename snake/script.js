@@ -19,6 +19,9 @@ let highScore = parseInt(localStorage.getItem("snakeHighScore")) || 0; // load h
 let isPaused = false; // track pause state
 const buttonsElement = document.getElementById("dif-div");
 const intsElement = document.getElementById("inst");
+const pauseBtn = document.getElementById("pauseBtn");
+const resumeBtn = document.getElementById("resumeBtn");
+const backToMenuBtn = document.getElementById("backToMenuBtn");
 // tail/body
 let history = [{ x: snakeX, y: snakeY }];
 
@@ -31,6 +34,21 @@ let appleY = 0;
 // 2. needed to track if the apple is eaten
 let appleExists = false;
 
+// Event delegation for difficulty buttons
+buttonsElement.addEventListener("click", (e) => {
+  const button = e.target.closest(".difficulty");
+  if (button) {
+    const speed = parseInt(button.dataset.speed);
+    const boost = parseFloat(button.dataset.boost);
+    setDifficulty(speed, boost);
+  }
+});
+
+// Event listeners for pause and resume buttons
+pauseBtn.addEventListener("click", togglePause);
+resumeBtn.addEventListener("click", togglePause);
+backToMenuBtn.addEventListener("click", backToMenu);
+
 // start screen
 function setDifficulty(ms, boost) {
   milliseconds = ms;
@@ -41,14 +59,6 @@ function setDifficulty(ms, boost) {
   canvasElement.style.display = "block";
   updateScoreDisplay();
 }
-
-const buttons = document.querySelectorAll(".difficulty");
-
-buttons.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    gameInterval = setInterval(moveSnake, milliseconds);
-  });
-});
 
 // apple functions
 

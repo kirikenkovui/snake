@@ -280,3 +280,43 @@ function backToMenu() {
   isPaused = false;
   location.reload();
 }
+
+// Mobile touch controls
+let touchStartX = 0;
+let touchStartY = 0;
+
+document.addEventListener("touchstart", (e) => {
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+});
+
+document.addEventListener("touchmove", (e) => {
+  if (directionLocked || isPaused) return;
+  
+  const touchEndX = e.touches[0].clientX;
+  const touchEndY = e.touches[0].clientY;
+  
+  const diffX = touchStartX - touchEndX;
+  const diffY = touchStartY - touchEndY;
+  const threshold = 50; // minimum swipe distance
+  
+  if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > threshold) {
+    // Horizontal swipe
+    if (diffX > 0 && direction !== "left") {
+      nextDirection = "right";
+      directionLocked = true;
+    } else if (diffX < 0 && direction !== "right") {
+      nextDirection = "left";
+      directionLocked = true;
+    }
+  } else if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > threshold) {
+    // Vertical swipe
+    if (diffY > 0 && direction !== "up") {
+      nextDirection = "down";
+      directionLocked = true;
+    } else if (diffY < 0 && direction !== "down") {
+      nextDirection = "up";
+      directionLocked = true;
+    }
+  }
+});

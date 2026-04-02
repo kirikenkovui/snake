@@ -165,10 +165,10 @@ function drawField() {
 document.addEventListener("keydown", (e) => {
   if (directionLocked || isPaused) return; // ignore extra rapid presses until next move
 
-  const upPressed = e.code === "KeyW";
-  const downPressed = e.code === "KeyS";
-  const leftPressed = e.code === "KeyA";
-  const rightPressed = e.code === "KeyD";
+  const upPressed = e.code === "KeyW" || e.code === "ArrowUp";
+  const downPressed = e.code === "KeyS" || e.code === "ArrowDown";
+  const leftPressed = e.code === "KeyA" || e.code === "ArrowLeft";
+  const rightPressed = e.code === "KeyD" || e.code === "ArrowRight";
 
   // pick intended direction but prevent direct reverse of current direction
   if (upPressed && direction !== "down") nextDirection = "up";
@@ -178,6 +178,11 @@ document.addEventListener("keydown", (e) => {
 
   // lock until moveSnake runs
   directionLocked = true;
+  
+  // Prevent default arrow key behavior (scrolling)
+  if (upPressed || downPressed || leftPressed || rightPressed) {
+    e.preventDefault();
+  }
 });
 
 // adding food

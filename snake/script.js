@@ -16,6 +16,7 @@ let directionLocked = false; // prevent multiple changes before next move
 let snakeLength = 4; // snake length in squares
 let speedBoost = 0.8;
 let highScore = parseInt(localStorage.getItem("snakeHighScore")) || 0; // load high score from storage
+let isPaused = false; // track pause state
 const buttonsElement = document.getElementById("dif-div");
 const intsElement = document.getElementById("inst");
 // tail/body
@@ -162,7 +163,7 @@ function drawField() {
 // controls snake
 // listens for key presses
 document.addEventListener("keydown", (e) => {
-  if (directionLocked) return; // ignore extra rapid presses until next move
+  if (directionLocked || isPaused) return; // ignore extra rapid presses until next move
 
   const upPressed = e.code === "KeyW";
   const downPressed = e.code === "KeyS";
@@ -250,4 +251,27 @@ function updateScoreDisplay() {
   const currentScore = snakeLength - 4;
   document.getElementById("currentScore").textContent = currentScore;
   document.getElementById("highScoreDisplay").textContent = highScore;
+}
+
+// Pause/Resume functionality
+function togglePause() {
+  if (!gameInterval) return; // game not running
+  
+  isPaused = !isPaused;
+  const pauseOverlay = document.getElementById("pauseOverlay");
+  
+  if (isPaused) {
+    clearInterval(gameInterval);
+    pauseOverlay.style.display = "flex";
+  } else {
+    pauseOverlay.style.display = "none";
+    gameInterval = setInterval(moveSnake, milliseconds);
+  }
+}
+
+// Back to menu function
+function backToMenu() {
+  clearInterval(gameInterval);
+  isPaused = false;
+  location.reload();
 }

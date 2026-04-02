@@ -37,6 +37,7 @@
                     <div>Score: <span id="currentScore">0</span></div>
                     <div>High Score: <span id="highScoreDisplay">0</span></div>
                 </div>
+                <button id="pauseBtn" class="pause-btn" onclick="togglePause()">⏸ Pause</button>
             </div>
 
             <canvas
@@ -50,6 +51,14 @@
                 "
             >
             </canvas>
+
+            <div id="pauseOverlay" class="pause-overlay" style="display: none;">
+                <div class="pause-content">
+                    <h2>Paused</h2>
+                    <button onclick="togglePause()" class="pause-action-btn">Resume</button>
+                    <button onclick="backToMenu()" class="pause-action-btn">Back to Menu</button>
+                </div>
+            </div>
         </div>
 
         <script src="script.js"></script>

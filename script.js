@@ -58,6 +58,8 @@ function setDifficulty(ms, boost) {
   document.getElementById("gameHeader").style.display = "block";
   canvasElement.style.display = "block";
   updateScoreDisplay();
+  // Start the game loop
+  gameInterval = setInterval(moveSnake, milliseconds);
 }
 
 // apple functions

@@ -139,6 +139,11 @@ function moveSnake() {
     appleExists = false;
     snakeLength++;
     updateScoreDisplay();
+    
+    // Increase game speed
+    milliseconds = Math.ceil(milliseconds * speedBoost);
+    clearInterval(gameInterval);
+    gameInterval = setInterval(moveSnake, milliseconds);
   }
   if (
     snakeX < 0 ||

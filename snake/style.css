@@ -1,24 +1,45 @@
+/* CSS Variables for theming */
+:root {
+    --primary-color: #d0a756;
+    --secondary-color: #030f14;
+    --border-color: #000000;
+    --background-light: #f0f0f0;
+    --text-color: #333;
+    --transition: all 0.3s;
+}
+
+* {
+    box-sizing: border-box;
+}
+
 body {
-    min-width: 100vh;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    margin: 0;
+    padding: 20px;
+    font-family: "Noto Sans", sans-serif;
 }
 
 canvas {
-    border: 1px solid #000000;
+    border: 2px solid var(--border-color);
+    max-width: 100%;
+    height: auto;
 }
 
 .game-header {
     padding: 15px;
-    background: #f0f0f0;
+    background: var(--background-light);
     border-radius: 5px;
     margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 20px;
+    flex-wrap: wrap;
+    width: 100%;
 }
 
 .score-display {
@@ -27,6 +48,7 @@ canvas {
     font-size: 18px;
     font-weight: bold;
     text-align: center;
+    flex: 1;
 }
 
 .score-display div {
@@ -35,12 +57,13 @@ canvas {
 
 .pause-btn {
     padding: 8px 16px;
-    background: #d0a756;
-    border: 2px solid #030f14;
+    background: var(--primary-color);
+    border: 2px solid var(--secondary-color);
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
-    transition: all 0.3s;
+    transition: var(--transition);
+    white-space: nowrap;
 }
 
 .pause-btn:hover {
@@ -71,12 +94,13 @@ canvas {
     border-radius: 10px;
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    max-width: 90%;
 }
 
 .pause-content h2 {
     font-size: 2em;
     margin: 0 0 30px 0;
-    color: #333;
+    color: var(--text-color);
 }
 
 .pause-action-btn {
@@ -85,18 +109,18 @@ canvas {
     padding: 12px;
     margin: 10px auto;
     background: white;
-    border: 2px solid #030f14;
+    border: 2px solid var(--secondary-color);
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
     font-size: 16px;
-    transition: all 0.3s;
-    color: #d0a756;
+    transition: var(--transition);
+    color: var(--primary-color);
 }
 
 .pause-action-btn:hover {
-    background: #d0a756;
-    color: #030f14;
+    background: var(--primary-color);
+    color: var(--secondary-color);
     transform: translateY(-2px);
 }
 
@@ -106,20 +130,43 @@ canvas {
 
 .difficulty {
     width: 200px;
-    height: 60px;
+    min-height: 60px;
     font-size: 24px;
     padding: 10px 20px;
+    background: white;
+    border: 2px solid var(--secondary-color);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: var(--transition);
+    color: var(--primary-color);
+    font-weight: bold;
 }
+
+.difficulty:hover {
+    background: var(--primary-color);
+    color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+.difficulty:active {
+    transform: translateY(0);
+}
+
 .buttons-div {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    align-items: center;
 }
+
 .game-wrapper {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 20px;
+    align-items: center;
+    width: 100%;
 }
+
 .hidden {
     opacity: 0;
     transform: scale(0.9);
@@ -131,58 +178,52 @@ h1 {
     font-family: "Noto Sans", sans-serif;
     font-weight: 700;
     font-style: italic;
+    text-align: center;
 }
 
-/* buttons css */
+/* Responsive design */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
 
-.button {
-    background: var(--color-back);
-    border-radius: 0.5em;
-    box-shadow:
-        inset 0px -6px 18px -6px rgba(3, 15, 20, 0),
-        inset rgba(54, 69, 75, 1) -1px -1px 6px 0px,
-        inset 12px 0px 12px -6px rgba(3, 15, 20, 0),
-        inset -12px 0px 12px -6px rgba(3, 15, 20, 0),
-        rgba(54, 69, 75, 1) -1px -1px 6px 0px;
-    border: solid 2px #030f14;
-    cursor: pointer;
-    font-size: 18px;
-    padding: 0.7em 1.7em;
-    outline: none;
-    transition: all 0.3s;
-    user-select: none;
-}
+    .game-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
 
-.button:hover {
-    box-shadow:
-        inset 0px -6px 18px -6px rgba(3, 15, 20, 1),
-        inset 0px 6px 18px -6px rgba(3, 15, 20, 1),
-        inset 12px 0px 12px -6px rgba(3, 15, 20, 0),
-        inset -12px 0px 12px -6px rgba(3, 15, 20, 0),
-        -1px -1px 6px 0px rgba(54, 69, 75, 1);
-}
+    .score-display {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
 
-.button:active {
-    box-shadow:
-        inset 0px -12px 12px -6px rgba(3, 15, 20, 1),
-        inset 0px 12px 12px -6px rgba(3, 15, 20, 1),
-        inset 12px 0px 12px -6px rgba(3, 15, 20, 1),
-        inset -12px 0px 12px -6px rgba(3, 15, 20, 1),
-        -1px -1px 6px 0px rgba(54, 69, 75, 1);
-}
+    .difficulty {
+        width: 100%;
+        max-width: 200px;
+        font-size: 18px;
+    }
 
-.text {
-    color: #d0a756;
-    font-weight: 700;
-    margin: auto;
-    transition: all 0.3s;
-    width: fit-content;
-}
+    .pause-action-btn {
+        width: 90%;
+        max-width: 200px;
+    }
 
-.button:hover .text {
-    transform: scale(0.9);
-}
+    canvas {
+        max-width: 100vw;
+        width: 100%;
+    }
 
-.button:active .text {
-    transform: scale(0.8);
+    .pause-content {
+        padding: 30px 20px;
+    }
+
+    .pause-content h2 {
+        font-size: 1.5em;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
 }

@@ -15,6 +15,7 @@ let nextDirection = direction; // buffered desired direction
 let directionLocked = false; // prevent multiple changes before next move
 let snakeLength = 4; // snake length in squares
 let speedBoost = 0.8;
+let highScore = parseInt(localStorage.getItem("snakeHighScore")) || 0; // load high score from storage
 const buttonsElement = document.getElementById("dif-div");
 const intsElement = document.getElementById("inst");
 // tail/body
@@ -193,6 +194,8 @@ function wait(ms) {
 }
 
 async function deathScreen() {
+  const finalScore = snakeLength - 4;
+  
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, canvasWidth, canvasHeight); // clear screen
 
@@ -203,16 +206,31 @@ async function deathScreen() {
 
   ctx.font = "36px Garamond";
   ctx.fillText(
-    `Score: ${snakeLength - 4}`,
+    `Score: ${finalScore}`,
     canvasWidth / 2,
     canvasHeight / 2 + 20,
   );
+
+  // Update high score if current score is higher
+  if (finalScore > highScore) {
+    highScore = finalScore;
+    localStorage.setItem("snakeHighScore", highScore);
+    
+    ctx.font = "28px Garamond";
+    ctx.fillStyle = "#FFD700";
+    ctx.fillText(
+      "New High Score!",
+      canvasWidth / 2,
+      canvasHeight / 2 + 60,
+    );
+  }
 
   // wait 1 second
   await wait(1000);
 
   // draw extra message
   ctx.font = "28px Garamond";
+  ctx.fillStyle = "white";
   ctx.fillText(
     "Choose difficulty to restart",
     canvasWidth / 2,

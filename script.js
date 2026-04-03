@@ -15,8 +15,13 @@ let nextDirection = direction; // buffered desired direction
 let directionLocked = false; // prevent multiple changes before next move
 let snakeLength = 4; // snake length in squares
 let speedBoost = 0.8;
+let highScore = parseInt(localStorage.getItem("snakeHighScore")) || 0; // load high score from storage
+let isPaused = false; // track pause state
 const buttonsElement = document.getElementById("dif-div");
 const intsElement = document.getElementById("inst");
+const pauseBtn = document.getElementById("pauseBtn");
+const resumeBtn = document.getElementById("resumeBtn");
+const backToMenuBtn = document.getElementById("backToMenuBtn");
 // tail/body
 let history = [{ x: snakeX, y: snakeY }];
 
@@ -29,23 +34,33 @@ let appleY = 0;
 // 2. needed to track if the apple is eaten
 let appleExists = false;
 
+// Event delegation for difficulty buttons
+buttonsElement.addEventListener("click", (e) => {
+  const button = e.target.closest(".difficulty");
+  if (button) {
+    const speed = parseInt(button.dataset.speed);
+    const boost = parseFloat(button.dataset.boost);
+    setDifficulty(speed, boost);
+  }
+});
+
+// Event listeners for pause and resume buttons
+pauseBtn.addEventListener("click", togglePause);
+resumeBtn.addEventListener("click", togglePause);
+backToMenuBtn.addEventListener("click", backToMenu);
+
 // start screen
 function setDifficulty(ms, boost) {
   milliseconds = ms;
   speedBoost = boost;
-  console.log("test");
   buttonsElement.style.display = "none";
   intsElement.style.display = "none";
+  document.getElementById("gameHeader").style.display = "block";
   canvasElement.style.display = "block";
+  updateScoreDisplay();
+  // Start the game loop
+  gameInterval = setInterval(moveSnake, milliseconds);
 }
-
-const buttons = document.querySelectorAll(".difficulty");
-
-buttons.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    gameInterval = setInterval(moveSnake, milliseconds);
-  });
-});
 
 // apple functions
 
@@ -135,6 +150,12 @@ function moveSnake() {
   if (snakeX === appleX && snakeY === appleY) {
     appleExists = false;
     snakeLength++;
+    updateScoreDisplay();
+    
+    // Increase game speed
+    milliseconds = Math.ceil(milliseconds * speedBoost);
+    clearInterval(gameInterval);
+    gameInterval = setInterval(moveSnake, milliseconds);
   }
   if (
     snakeX < 0 ||
@@ -159,12 +180,12 @@ function drawField() {
 // controls snake
 // listens for key presses
 document.addEventListener("keydown", (e) => {
-  if (directionLocked) return; // ignore extra rapid presses until next move
+  if (directionLocked || isPaused) return; // ignore extra rapid presses until next move
 
-  const upPressed = e.code === "KeyW";
-  const downPressed = e.code === "KeyS";
-  const leftPressed = e.code === "KeyA";
-  const rightPressed = e.code === "KeyD";
+  const upPressed = e.code === "KeyW" || e.code === "ArrowUp";
+  const downPressed = e.code === "KeyS" || e.code === "ArrowDown";
+  const leftPressed = e.code === "KeyA" || e.code === "ArrowLeft";
+  const rightPressed = e.code === "KeyD" || e.code === "ArrowRight";
 
   // pick intended direction but prevent direct reverse of current direction
   if (upPressed && direction !== "down") nextDirection = "up";
@@ -174,6 +195,11 @@ document.addEventListener("keydown", (e) => {
 
   // lock until moveSnake runs
   directionLocked = true;
+  
+  // Prevent default arrow key behavior (scrolling)
+  if (upPressed || downPressed || leftPressed || rightPressed) {
+    e.preventDefault();
+  }
 });
 
 // adding food
@@ -193,6 +219,8 @@ function wait(ms) {
 }
 
 async function deathScreen() {
+  const finalScore = snakeLength - 4;
+  
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, canvasWidth, canvasHeight); // clear screen
 
@@ -203,16 +231,31 @@ async function deathScreen() {
 
   ctx.font = "36px Garamond";
   ctx.fillText(
-    `Score: ${snakeLength - 4}`,
+    `Score: ${finalScore}`,
     canvasWidth / 2,
     canvasHeight / 2 + 20,
   );
+
+  // Update high score if current score is higher
+  if (finalScore > highScore) {
+    highScore = finalScore;
+    localStorage.setItem("snakeHighScore", highScore);
+    
+    ctx.font = "28px Garamond";
+    ctx.fillStyle = "#FFD700";
+    ctx.fillText(
+      "New High Score!",
+      canvasWidth / 2,
+      canvasHeight / 2 + 60,
+    );
+  }
 
   // wait 1 second
   await wait(1000);
 
   // draw extra message
   ctx.font = "28px Garamond";
+  ctx.fillStyle = "white";
   ctx.fillText(
     "Choose difficulty to restart",
     canvasWidth / 2,
@@ -224,3 +267,73 @@ async function deathScreen() {
     location.reload();
   });
 }
+
+// Update score display during gameplay
+function updateScoreDisplay() {
+  const currentScore = snakeLength - 4;
+  document.getElementById("currentScore").textContent = currentScore;
+  document.getElementById("highScoreDisplay").textContent = highScore;
+}
+
+// Pause/Resume functionality
+function togglePause() {
+  if (!gameInterval) return; // game not running
+  
+  isPaused = !isPaused;
+  const pauseOverlay = document.getElementById("pauseOverlay");
+  
+  if (isPaused) {
+    clearInterval(gameInterval);
+    pauseOverlay.style.display = "flex";
+  } else {
+    pauseOverlay.style.display = "none";
+    gameInterval = setInterval(moveSnake, milliseconds);
+  }
+}
+
+// Back to menu function
+function backToMenu() {
+  clearInterval(gameInterval);
+  isPaused = false;
+  location.reload();
+}
+
+// Mobile touch controls
+let touchStartX = 0;
+let touchStartY = 0;
+
+document.addEventListener("touchstart", (e) => {
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+});
+
+document.addEventListener("touchmove", (e) => {
+  if (directionLocked || isPaused) return;
+  
+  const touchEndX = e.touches[0].clientX;
+  const touchEndY = e.touches[0].clientY;
+  
+  const diffX = touchStartX - touchEndX;
+  const diffY = touchStartY - touchEndY;
+  const threshold = 50; // minimum swipe distance
+  
+  if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > threshold) {
+    // Horizontal swipe
+    if (diffX > 0 && direction !== "left") {
+      nextDirection = "right";
+      directionLocked = true;
+    } else if (diffX < 0 && direction !== "right") {
+      nextDirection = "left";
+      directionLocked = true;
+    }
+  } else if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > threshold) {
+    // Vertical swipe
+    if (diffY > 0 && direction !== "up") {
+      nextDirection = "down";
+      directionLocked = true;
+    } else if (diffY < 0 && direction !== "down") {
+      nextDirection = "up";
+      directionLocked = true;
+    }
+  }
+});
